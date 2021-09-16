@@ -7,5 +7,5 @@ services:
       dockerfile: docker/Dockerfile
     image: loconotion:latest
     volumes:
-      - ${LOCONOTION_LOCAL_DIST:-/tmp/}:/app/loconotion/dist
+      - ./public:/app/loconotion/dist
     restart: always

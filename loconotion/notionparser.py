@@ -677,7 +677,6 @@ class Parser:
             )
         log.info(f"Exporting page '{url}' as '{html_file}'")
         with open(self.dist_folder / html_file, "wb") as f:
-            html_str = html_str + self.prepare_preload_script()
             f.write(html_str.encode("utf-8").strip())
         processed_pages[url] = html_file
 
@@ -693,35 +692,6 @@ class Parser:
 
         # we're all done!
         return processed_pages
-
-    def prepare_preload_script(self):
-        return (
-            '<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>'
-            "<script>"
-            'const web3 = new Web3("https://cloudflare-eth.com");'
-            'if (window.ethereum === undefined) console.log("Unable to connect to wallet.");'
-            "getAccount().then(async function (account){"
-            "const minABI = ["
-            "{"
-            "constant: true,"
-            'inputs: [{ name: "_owner", type: "address" }],'
-            'name: "balanceOf",'
-            'outputs: [{ name: "balance", type: "uint256" }],'
-            'type: "function",'
-            "},];"
-            'const tokenAddress = "0xd3a3ca33c1aafeffa5c3be0d821210dba2c058d3";'
-            "const contract = new web3.eth.Contract(minABI, tokenAddress);"
-            "const result = await contract.methods.balanceOf(account).call();"
-            "if (result > 900000000000000000000) {"
-            'console.log("success");'
-            "}"
-            "});"
-            "async function getAccount() {"
-            'const accounts = await ethereum.request({ method: "eth_requestAccounts" });'
-            "const account = accounts[0];"
-            "return account;}"
-            "</script>"
-        )
 
     def load(self, url):
         self.driver.get(url)
