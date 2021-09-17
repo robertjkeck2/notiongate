@@ -2,6 +2,6 @@
 module.exports = {
   reactStrictMode: true,
   rewrites: async () => [
-    {source: '/:path*', destination: '/'},
+    {source: '/:path*.html', destination: '/:path*'},
   ],
 };

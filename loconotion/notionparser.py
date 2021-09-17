@@ -51,7 +51,7 @@ class Parser:
         site_name = self.config.get("name", self.get_page_slug(url, extension=False))
 
         # set the output folder based on the site name
-        self.dist_folder = Path(config.get("output", Path("dist") / site_name))
+        self.dist_folder = Path(config.get("output", Path("dist")))
         log.info(f"Setting output path to '{self.dist_folder}'")
 
         # check if the argument to clean the dist folder was passed
