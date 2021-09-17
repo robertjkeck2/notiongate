@@ -8,15 +8,13 @@ declare let window: any;
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [authorized, setAuthorized] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
   const web3 = new Web3("https://cloudflare-eth.com");
 
   useEffect(() => {
-    setIsLoading(true);
     if (window.ethereum === undefined) {
-      console.log("Unable to connect to wallet.");
       setHasError(true);
       setIsLoading(false);
       return;
@@ -47,28 +45,30 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   const checkHoldings = async (account: string) => {
-    const minABI = [
-      {
-        constant: true,
-        inputs: [{ name: "_owner", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ name: "balance", type: "uint256" }],
-        type: "function",
-      } as any,
-    ];
-    const tokenAddress = "0xd3a3ca33c1aafeffa5c3be0d821210dba2c058d3";
-    const contract = new web3.eth.Contract(minABI, tokenAddress);
-    const result = await contract.methods.balanceOf(account).call();
-    if (result > 900000000000000000000) {
-      setAuthorized(true);
-    }
+    try {
+      const minABI = [
+        {
+          constant: true,
+          inputs: [{ name: "_owner", type: "address" }],
+          name: "balanceOf",
+          outputs: [{ name: "balance", type: "uint256" }],
+          type: "function",
+        } as any,
+      ];
+      const tokenAddress = "0xd3a3ca33c1aafeffa5c3be0d821210dba2c058d3";
+      const contract = new web3.eth.Contract(minABI, tokenAddress);
+      const result = await contract.methods.balanceOf(account).call();
+      if (result > 900000000000000000000) {
+        setAuthorized(true);
+      }
+    } catch (err) {}
     setIsLoading(false);
   };
 
   return authorized ? (
     <Component {...pageProps} />
   ) : isLoading ? (
-    <div>Loading...</div>
+    <div></div>
   ) : (
     <div>
       <Head>
