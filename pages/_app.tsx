@@ -10,6 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [authorized, setAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [insufficientFunds, setInsufficientFunds] = useState(false);
 
   const web3 = new Web3("https://cloudflare-eth.com");
 
@@ -60,6 +61,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       const result = await contract.methods.balanceOf(account).call();
       if (result >= 75000000000000000000) {
         setAuthorized(true);
+      } else {
+        setInsufficientFunds(true);
       }
     } catch (err) {}
     setIsLoading(false);
@@ -83,8 +86,18 @@ function MyApp({ Component, pageProps }: AppProps) {
             className="button"
             onClick={hasError ? () => {} : handleWallet}
           >
-            {hasError ? "Something's Wrong" : "Login To Read"}
-            <span>{hasError ? "Try Chrome" : "75 $FWB"}</span>
+            {hasError
+              ? "Something's Wrong"
+              : insufficientFunds
+              ? "Buy More $FWB"
+              : "Login To Read"}
+            <span>
+              {hasError
+                ? "Try Chrome"
+                : insufficientFunds
+                ? "Then Try Again"
+                : "75 $FWB"}
+            </span>
           </button>
         </div>
       </div>
