@@ -55,10 +55,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           type: "function",
         } as any,
       ];
-      const tokenAddress = "0xd3a3ca33c1aafeffa5c3be0d821210dba2c058d3";
+      const tokenAddress = "0x35bd01fc9d6d5d81ca9e055db88dc49aa2c699a8";
       const contract = new web3.eth.Contract(minABI, tokenAddress);
       const result = await contract.methods.balanceOf(account).call();
-      if (result > 900000000000000000000) {
+      if (result >= 75000000000000000000) {
         setAuthorized(true);
       }
     } catch (err) {}
